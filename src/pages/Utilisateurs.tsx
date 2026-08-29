@@ -17,7 +17,7 @@ function Utilisateurs() {
 
   const chargerUtilisateurs = async () => {
     const response = await fetch(
-      "http://localhost:3001/api/utilisateurs"
+      "http://https://gestion-boutique-2qu3.onrender.com/api/utilisateurs"
     );
 
     const data = await response.json();

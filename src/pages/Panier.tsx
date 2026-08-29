@@ -172,7 +172,7 @@ function Panier() {
                   {article.produit.image ? (
 
                     <img
-                      src={`http://localhost:3001/uploads/${article.produit.image}`}
+                      src={`http://https://gestion-boutique-2qu3.onrender.com/uploads/${article.produit.image}`}
                       alt={article.produit.nom}
                       className="w-28 h-28 object-cover rounded-xl"
                     />

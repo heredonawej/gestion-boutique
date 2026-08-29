@@ -305,7 +305,7 @@ const definirPhotoPrincipale = async (
       localStorage.getItem("token");
 
     const response = await fetch(
-      `http://localhost:3001/api/produits/${produitPhotos.id}/images/${image.id}/principale`,
+      `http://https://gestion-boutique-2qu3.onrender.com/api/produits/${produitPhotos.id}/images/${image.id}/principale`,
       {
         method: "PUT",
 
@@ -450,7 +450,7 @@ const definirPhotoPrincipale = async (
                         {produit.image ? (
 
                           <img
-                            src={`http://localhost:3001/uploads/${produit.image}`}
+                            src={`http://https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
                             alt={produit.nom}
                             className="w-16 h-16 object-cover rounded-lg mx-auto"
                           />
@@ -676,7 +676,7 @@ const definirPhotoPrincipale = async (
     >
 
       <img
-        src={`http://localhost:3001/uploads/${image.image}`}
+        src={`http://https://gestion-boutique-2qu3.onrender.com/uploads/${image.image}`}
         alt="Photo produit"
         className="w-full h-40 object-cover rounded-xl border"
       />

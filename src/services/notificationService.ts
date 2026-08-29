@@ -8,7 +8,7 @@ export interface Notification {
 }
 
 const API =
-  "http://localhost:3001/api/notifications";
+  "http://https://gestion-boutique-2qu3.onrender.com/api/notifications";
 
 export async function getNotifications(
   commandeId: number

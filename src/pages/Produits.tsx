@@ -64,7 +64,10 @@ const produitsFiltres = produits.filter((produit) => {
   onProduitAjoute={chargerProduits}
   onAnnulerEdition={() => setProduitEnEdition(null)}
   onModifier={async (produit) => {
-    const data = await modifierProduit(produit);
+    const data = await modifierProduit({
+  ...produit,
+  prix_achat: produit.prix_achat ?? 0,
+});
 
     alert(data.message);
 

@@ -1,4 +1,4 @@
-const API = "http://localhost:3001/api/commandes";
+const API = "http://https://gestion-boutique-2qu3.onrender.com/api/commandes";
 
 // ==========================================
 // TYPES

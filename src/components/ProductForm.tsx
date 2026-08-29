@@ -82,7 +82,7 @@ function ProductForm({
       if (produitEnEdition.image) {
 
         setPreview(
-          `http://localhost:3001/uploads/${produitEnEdition.image}`
+          `http://https://gestion-boutique-2qu3.onrender.com/uploads/${produitEnEdition.image}`
         );
 
       } else {

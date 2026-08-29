@@ -1,4 +1,4 @@
-const API = "http://localhost:3001/api/login";
+const API = "http://https://gestion-boutique-2qu3.onrender.com/api/login";
 
 export async function login(email: string, motDePasse: string) {
   const response = await fetch(API, {

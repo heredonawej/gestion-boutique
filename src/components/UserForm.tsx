@@ -39,7 +39,7 @@ function UserForm({
 
     if (utilisateurEnEdition) {
       response = await fetch(
-        `http://localhost:3001/api/utilisateurs/${utilisateurEnEdition.id}`,
+        `http://https://gestion-boutique-2qu3.onrender.com/api/utilisateurs/${utilisateurEnEdition.id}`,
         {
           method: "PUT",
           headers: {
@@ -54,7 +54,7 @@ function UserForm({
       );
     } else {
       response = await fetch(
-        "http://localhost:3001/api/utilisateurs",
+        "http://https://gestion-boutique-2qu3.onrender.com/api/utilisateurs",
         {
           method: "POST",
           headers: {

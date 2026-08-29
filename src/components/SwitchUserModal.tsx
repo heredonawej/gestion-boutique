@@ -19,7 +19,7 @@ function SwitchUserModal({ onClose }: Props) {
       setChargement(true);
 
       const response = await fetch(
-        "http://localhost:3001/api/login",
+        "http://https://gestion-boutique-2qu3.onrender.com/api/login",
         {
           method: "POST",
           headers: {

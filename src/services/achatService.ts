@@ -1,4 +1,4 @@
-const API = "http://localhost:3001/api/achats";
+const API = "http://https://gestion-boutique-2qu3.onrender.com/api/achats";
 
 // Enregistrer un achat
 export async function enregistrerAchat(

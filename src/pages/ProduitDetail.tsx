@@ -282,7 +282,7 @@ function ProduitDetail() {
                 {imageAffichee ? (
 
                   <img
-                    src={`http://localhost:3001/uploads/${imageAffichee}`}
+                    src={`http://https://gestion-boutique-2qu3.onrender.com/uploads/${imageAffichee}`}
                     alt={produit.nom}
                     className="w-full h-full object-contain"
                   />
@@ -326,7 +326,7 @@ function ProduitDetail() {
                     >
 
                       <img
-                        src={`http://localhost:3001/uploads/${produit.image}`}
+                        src={`http://https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
                         alt="Photo principale"
                         className="w-full h-full object-cover"
                       />
@@ -357,7 +357,7 @@ function ProduitDetail() {
                       >
 
                         <img
-                          src={`http://localhost:3001/uploads/${photo.image}`}
+                          src={`http://https://gestion-boutique-2qu3.onrender.com/uploads/${photo.image}`}
                           alt={`Photo ${photo.id}`}
                           className="w-full h-full object-cover"
                         />
@@ -605,7 +605,7 @@ function ProduitDetail() {
                       {produitSimilaire.image ? (
 
                         <img
-                          src={`http://localhost:3001/uploads/${produitSimilaire.image}`}
+                          src={`http://https://gestion-boutique-2qu3.onrender.com/uploads/${produitSimilaire.image}`}
                           alt={
                             produitSimilaire.nom
                           }

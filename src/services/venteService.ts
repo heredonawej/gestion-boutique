@@ -1,6 +1,6 @@
 import type { Vente } from "../types/Vente";
 
-const API = "http://localhost:3001/api/ventes";
+const API = "http://https://gestion-boutique-2qu3.onrender.com/api/ventes";
 
 export async function enregistrerVente(
   produit_id: number,
