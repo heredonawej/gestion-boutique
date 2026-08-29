@@ -11,7 +11,6 @@ const verifierToken = require("./middleware/auth");
 const verifierAdmin = require("./middleware/admin");
 
 const app = express();
-const PORT = 3001;
 
 // Middleware
 app.use(cors());
@@ -1717,7 +1716,7 @@ app.post("/api/commandes", (req, res) => {
 
 app.get("/api/commandes", (req, res) => {
   const sql = `
-    SELECT
+    SELECTt 
       id,
       nom_client,
       telephone,
@@ -2821,6 +2820,8 @@ setInterval(
 // Vérification au démarrage
 nettoyerVentesAnciennes();
 
-app.listen(PORT, () => {
-  console.log(`✅ Serveur démarré sur http://localhost:${PORT}`);
+const PORT = process.env.PORT || 3001;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ Serveur démarré sur le port ${PORT}`);
 });
