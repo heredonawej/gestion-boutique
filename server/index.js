@@ -1716,7 +1716,7 @@ app.post("/api/commandes", (req, res) => {
 
 app.get("/api/commandes", (req, res) => {
   const sql = `
-    SELECTt 
+    SELECT
       id,
       nom_client,
       telephone,
