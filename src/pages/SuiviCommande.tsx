@@ -598,7 +598,7 @@ function SuiviCommande() {
                       {produit.image ? (
 
                         <img
-                          src={`http://https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
+                          src={`https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
                           alt={produit.nom}
                           className="w-20 h-20 object-cover rounded-lg"
                         />
