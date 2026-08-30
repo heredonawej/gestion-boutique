@@ -1,7 +1,7 @@
 Set WshShell = CreateObject("WScript.Shell")
 
-chemin = Replace(WScript.ScriptFullName, "DEMARRER.vbs", "LANCER.bat")
+dossier = Left(WScript.ScriptFullName, InStrRev(WScript.ScriptFullName, "\"))
 
-WshShell.Run """" & chemin & """", 0, False
+WshShell.Run """" & dossier & "LANCER.bat" & """", 0, False
 
 Set WshShell = Nothing
