@@ -305,7 +305,7 @@ const definirPhotoPrincipale = async (
       localStorage.getItem("token");
 
     const response = await fetch(
-      `http://https://gestion-boutique-2qu3.onrender.com/api/produits/${produitPhotos.id}/images/${image.id}/principale`,
+      `https://gestion-boutique-2qu3.onrender.com/api/produits/${produitPhotos.id}/images/${image.id}/principale`,
       {
         method: "PUT",
 

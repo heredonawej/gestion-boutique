@@ -1,4 +1,4 @@
-const API = "http://https://gestion-boutique-2qu3.onrender.com/api/utilisateurs";
+const API = "https://gestion-boutique-2qu3.onrender.com/api/utilisateurs";
 
 export async function supprimerUtilisateur(id: number) {
   const response = await fetch(`${API}/${id}`, {

@@ -26,7 +26,7 @@ function Corbeille() {
   const chargerCorbeille = async () => {
     try {
       const response = await fetch(
-        "http://https://gestion-boutique-2qu3.onrender.com/api/corbeille"
+        "https://gestion-boutique-2qu3.onrender.com/api/corbeille"
       );
 
       const data: ElementCorbeille[] =
@@ -104,7 +104,7 @@ function Corbeille() {
 
     try {
       const response = await fetch(
-        `http://https://gestion-boutique-2qu3.onrender.com/api/corbeille/${id}`,
+        `https://gestion-boutique-2qu3.onrender.com/api/corbeille/${id}`,
         {
           method: "DELETE",
         }
@@ -185,7 +185,7 @@ const restaurerElement = async (id: number) => {
 
   try {
     const response = await fetch(
-      `http://https://gestion-boutique-2qu3.onrender.com/api/corbeille/${id}/restaurer`,
+      `https://gestion-boutique-2qu3.onrender.com/api/corbeille/${id}/restaurer`,
       {
         method: "PUT",
         headers: {
