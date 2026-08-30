@@ -1,10 +1,15 @@
 import type { Produit } from "../types/Produit";
 
-const API = "http://https://gestion-boutique-2qu3.onrender.com/api/produits";
+const API = "https://gestion-boutique-2qu3.onrender.com/api/produits";
 
 // Récupérer tous les produits
 export async function getProduits(): Promise<Produit[]> {
   const response = await fetch(API);
+
+  if (!response.ok) {
+    throw new Error("Erreur lors de la récupération des produits.");
+  }
+
   return response.json();
 }
 
