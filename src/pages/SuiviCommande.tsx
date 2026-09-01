@@ -16,6 +16,10 @@ import type {
   Notification,
 } from "../services/notificationService";
 
+const SERVER_URL = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com"
+  : "http://localhost:3001";
+
 function SuiviCommande() {
 
   const [numeroCommande, setNumeroCommande] =
@@ -598,10 +602,10 @@ function SuiviCommande() {
                       {produit.image ? (
 
                         <img
-                          src={`https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
-                          alt={produit.nom}
-                          className="w-20 h-20 object-cover rounded-lg"
-                        />
+  src={`${SERVER_URL}/uploads/${produit.image}`}
+  alt={produit.nom}
+  className="w-20 h-20 object-cover rounded-lg"
+/>
 
                       ) : (
 

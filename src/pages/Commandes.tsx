@@ -566,19 +566,23 @@ function Commandes() {
 
                       {produit.image ? (
 
-                        <img
-                          src={`https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
-                          alt={produit.nom}
-                          className="w-20 h-20 object-cover rounded-lg"
-                        />
+  <img
+    src={`${
+      import.meta.env.PROD
+        ? "https://gestion-boutique-2qu3.onrender.com"
+        : "http://localhost:3001"
+    }/uploads/${produit.image}`}
+    alt={produit.nom}
+    className="w-20 h-20 object-cover rounded-lg"
+  />
 
-                      ) : (
+) : (
 
-                        <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center text-3xl">
-                          📦
-                        </div>
+  <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center text-3xl">
+    📦
+  </div>
 
-                      )}
+)}
 
                       <div className="flex-1">
 

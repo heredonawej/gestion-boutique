@@ -1,3 +1,4 @@
+import API_URL from "../config";
 import { useEffect, useState } from "react";
 
 import { ajouterProduit } from "../services/produitService";
@@ -82,8 +83,8 @@ function ProductForm({
       if (produitEnEdition.image) {
 
         setPreview(
-          `https://gestion-boutique-2qu3.onrender.com/uploads/${produitEnEdition.image}`
-        );
+  `${API_URL}/uploads/${produitEnEdition.image}`
+);
 
       } else {
 

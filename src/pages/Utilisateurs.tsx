@@ -16,9 +16,13 @@ function Utilisateurs() {
     useState<Utilisateur | null>(null);
 
   const chargerUtilisateurs = async () => {
-    const response = await fetch(
-      "https://gestion-boutique-2qu3.onrender.com/api/utilisateurs"
-    );
+    const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com"
+  : "http://localhost:3001";
+
+const response = await fetch(
+  `${API}/api/utilisateurs`
+);
 
     const data = await response.json();
 

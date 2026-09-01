@@ -1,4 +1,6 @@
-const API = "https://gestion-boutique-2qu3.onrender.com/api/utilisateurs";
+const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com/api/utilisateurs"
+  : "http://localhost:3001/api/utilisateurs";
 
 export async function supprimerUtilisateur(id: number) {
   const response = await fetch(`${API}/${id}`, {

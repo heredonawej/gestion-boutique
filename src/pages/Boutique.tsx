@@ -179,10 +179,14 @@ function Boutique() {
                   {produit.image ? (
 
                     <img
-                      src={`https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
-                      alt={produit.nom}
-                      className="w-full h-56 object-cover hover:scale-105 transition duration-300"
-                    />
+  src={`${
+    import.meta.env.PROD
+      ? "https://gestion-boutique-2qu3.onrender.com"
+      : "http://localhost:3001"
+  }/uploads/${produit.image}`}
+  alt={produit.nom}
+  className="w-full h-56 object-cover hover:scale-105 transition duration-300"
+/>
 
                   ) : (
 

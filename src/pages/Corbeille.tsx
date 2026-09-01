@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
 
+const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com/api"
+  : "http://localhost:3001/api";
+
 interface ElementCorbeille {
   id: number;
   type: string;
@@ -26,8 +30,8 @@ function Corbeille() {
   const chargerCorbeille = async () => {
     try {
       const response = await fetch(
-        "https://gestion-boutique-2qu3.onrender.com/api/corbeille"
-      );
+  `${API}/corbeille`
+);
 
       const data: ElementCorbeille[] =
         await response.json();
@@ -104,7 +108,7 @@ function Corbeille() {
 
     try {
       const response = await fetch(
-        `https://gestion-boutique-2qu3.onrender.com/api/corbeille/${id}`,
+  `${API}/corbeille/${id}`,
         {
           method: "DELETE",
         }
@@ -185,7 +189,7 @@ const restaurerElement = async (id: number) => {
 
   try {
     const response = await fetch(
-      `https://gestion-boutique-2qu3.onrender.com/api/corbeille/${id}/restaurer`,
+  `${API}/corbeille/${id}/restaurer`,
       {
         method: "PUT",
         headers: {

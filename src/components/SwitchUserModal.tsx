@@ -1,4 +1,5 @@
 import { useState } from "react";
+import API_URL from "../config";
 
 interface Props {
   onClose: () => void;
@@ -19,7 +20,7 @@ function SwitchUserModal({ onClose }: Props) {
       setChargement(true);
 
       const response = await fetch(
-        "https://gestion-boutique-2qu3.onrender.com/api/login",
+  `${API_URL}/api/login`,
         {
           method: "POST",
           headers: {

@@ -1,6 +1,8 @@
 import type { Fournisseur } from "../types/Fournisseur";
 
-const API = "https://gestion-boutique-2qu3.onrender.com/api/fournisseurs";
+const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com/api/fournisseurs"
+  : "http://localhost:3001/api/fournisseurs";
 
 export async function getFournisseurs(): Promise<Fournisseur[]> {
   const response = await fetch(API);

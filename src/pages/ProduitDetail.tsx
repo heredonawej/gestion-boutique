@@ -11,6 +11,10 @@ import { usePanier } from "../context/PanierContext";
 
 import type { Produit } from "../types/Produit";
 
+const SERVER_URL = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com"
+  : "http://localhost:3001";
+
 function ProduitDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -282,10 +286,10 @@ function ProduitDetail() {
                 {imageAffichee ? (
 
                   <img
-                    src={`https://gestion-boutique-2qu3.onrender.com/uploads/${imageAffichee}`}
-                    alt={produit.nom}
-                    className="w-full h-full object-contain"
-                  />
+  src={`${SERVER_URL}/uploads/${imageAffichee}`}
+  alt={produit.nom}
+  className="w-full h-full object-contain"
+/>
 
                 ) : (
 
@@ -326,7 +330,7 @@ function ProduitDetail() {
                     >
 
                       <img
-                        src={`https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
+                        src={`${SERVER_URL}/uploads/${produit.image}`}
                         alt="Photo principale"
                         className="w-full h-full object-cover"
                       />
@@ -357,7 +361,7 @@ function ProduitDetail() {
                       >
 
                         <img
-                          src={`https://gestion-boutique-2qu3.onrender.com/uploads/${photo.image}`}
+                          src={`${SERVER_URL}/uploads/${photo.image}`}
                           alt={`Photo ${photo.id}`}
                           className="w-full h-full object-cover"
                         />
@@ -605,7 +609,7 @@ function ProduitDetail() {
                       {produitSimilaire.image ? (
 
                         <img
-                          src={`https://gestion-boutique-2qu3.onrender.com/uploads/${produitSimilaire.image}`}
+                          src={`${SERVER_URL}/uploads/${produitSimilaire.image}`}
                           alt={
                             produitSimilaire.nom
                           }

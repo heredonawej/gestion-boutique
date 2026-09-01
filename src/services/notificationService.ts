@@ -7,8 +7,9 @@ export interface Notification {
   date_notification: string;
 }
 
-const API =
-  "https://gestion-boutique-2qu3.onrender.com/api/notifications";
+const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com/api/notifications"
+  : "http://localhost:3001/api/notifications";
 
 export async function getNotifications(
   commandeId: number

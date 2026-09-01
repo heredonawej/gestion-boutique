@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import API_URL from "../config";
 
 interface Utilisateur {
   id: number;
@@ -39,7 +40,7 @@ function UserForm({
 
     if (utilisateurEnEdition) {
       response = await fetch(
-        `https://gestion-boutique-2qu3.onrender.com/api/utilisateurs/${utilisateurEnEdition.id}`,
+        `${API_URL}/api/utilisateurs/${utilisateurEnEdition.id}`,
         {
           method: "PUT",
           headers: {
@@ -54,7 +55,7 @@ function UserForm({
       );
     } else {
       response = await fetch(
-        "https://gestion-boutique-2qu3.onrender.com/api/utilisateurs",
+        `${API_URL}/api/utilisateurs`,
         {
           method: "POST",
           headers: {

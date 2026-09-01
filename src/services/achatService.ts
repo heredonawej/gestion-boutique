@@ -1,4 +1,6 @@
-const API = "https://gestion-boutique-2qu3.onrender.com/api/achats";
+const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com/api/achats"
+  : "http://localhost:3001/api/achats";
 
 // Enregistrer un achat
 export async function enregistrerAchat(

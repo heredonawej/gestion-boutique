@@ -8,6 +8,7 @@ import {
   supprimerImageProduit,
   type ProduitImage,
 } from "../services/imageService";
+import API_URL from "../config";
 
 interface ProductTableProps {
   produits: Produit[];
@@ -305,15 +306,14 @@ const definirPhotoPrincipale = async (
       localStorage.getItem("token");
 
     const response = await fetch(
-      `https://gestion-boutique-2qu3.onrender.com/api/produits/${produitPhotos.id}/images/${image.id}/principale`,
-      {
-        method: "PUT",
-
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+  `${API_URL}/api/produits/${produitPhotos.id}/images/${image.id}/principale`,
+  {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+);
 
     const data = await response.json();
 
@@ -450,10 +450,10 @@ const definirPhotoPrincipale = async (
                         {produit.image ? (
 
                           <img
-                            src={`https://gestion-boutique-2qu3.onrender.com/uploads/${produit.image}`}
-                            alt={produit.nom}
-                            className="w-16 h-16 object-cover rounded-lg mx-auto"
-                          />
+  src={`${API_URL}/uploads/${produit.image}`}
+  alt={produit.nom}
+  className="w-16 h-16 object-cover rounded-lg mx-auto"
+/>
 
                         ) : (
 
@@ -676,10 +676,10 @@ const definirPhotoPrincipale = async (
     >
 
       <img
-        src={`https://gestion-boutique-2qu3.onrender.com/uploads/${image.image}`}
-        alt="Photo produit"
-        className="w-full h-40 object-cover rounded-xl border"
-      />
+  src={`${API_URL}/uploads/${image.image}`}
+  alt="Photo produit"
+  className="w-full h-40 object-cover rounded-xl border"
+/>
 
       {/* Bouton photo principale */}
 

@@ -1,4 +1,6 @@
-const API = "https://gestion-boutique-2qu3.onrender.com/api/commandes";
+const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com/api/commandes"
+  : "http://localhost:3001/api/commandes";
 
 // ==========================================
 // TYPES
@@ -27,6 +29,7 @@ export interface Commande {
   total: number;
   statut: string;
   date_commande: string;
+  date_livraison?: string;
 }
 
 // ==========================================
@@ -127,6 +130,10 @@ export async function getCommandeById(
 
   return data;
 }
+
+// ==========================================
+// DÉTAILS
+// ==========================================
 
 export interface DetailCommande {
   id: number;

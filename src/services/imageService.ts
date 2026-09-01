@@ -1,4 +1,6 @@
-const API = "https://gestion-boutique-2qu3.onrender.com/api/produits";
+const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com/api/produits"
+  : "http://localhost:3001/api/produits";
 
 // ==========================================
 // TYPE PHOTO PRODUIT

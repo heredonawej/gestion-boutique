@@ -1,6 +1,8 @@
 import type { Produit } from "../types/Produit";
 
-const API = "https://gestion-boutique-2qu3.onrender.com/api/produits";
+const API = import.meta.env.PROD
+  ? "https://gestion-boutique-2qu3.onrender.com/api/produits"
+  : "http://localhost:3001/api/produits";
 
 // Récupérer tous les produits
 export async function getProduits(): Promise<Produit[]> {
