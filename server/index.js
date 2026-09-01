@@ -2296,6 +2296,10 @@ app.put("/api/notifications/:id/lue", (req, res) => {
 // MODIFIER LE STATUT D'UNE COMMANDE
 // ==========================================
 
+// ==========================================
+// MODIFIER LE STATUT D'UNE COMMANDE
+// ==========================================
+
 app.put("/api/commandes/:id/statut", (req, res) => {
   const commandeId = Number(req.params.id);
   const { statut } = req.body;
@@ -2309,13 +2313,24 @@ app.put("/api/commandes/:id/statut", (req, res) => {
     "annulee",
   ];
 
+  // Vérification de l'ID
+  if (!Number.isInteger(commandeId) || commandeId <= 0) {
+    return res.status(400).json({
+      message: "Numéro de commande invalide.",
+    });
+  }
+
+  // Vérification du statut
   if (!statutsAutorises.includes(statut)) {
     return res.status(400).json({
       message: "Statut de commande invalide.",
     });
   }
 
-  // Récupérer la commande
+  // ==========================================
+  // RÉCUPÉRER LA COMMANDE
+  // ==========================================
+
   db.get(
     `
     SELECT *
@@ -2325,8 +2340,14 @@ app.put("/api/commandes/:id/statut", (req, res) => {
     [commandeId],
     (err, commande) => {
       if (err) {
+        console.error(
+          "Erreur récupération commande :",
+          err.message
+        );
+
         return res.status(500).json({
-          message: err.message,
+          message:
+            "Erreur lors de la récupération de la commande.",
         });
       }
 
@@ -2336,22 +2357,26 @@ app.put("/api/commandes/:id/statut", (req, res) => {
         });
       }
 
-      // Si la commande est déjà livrée,
-      // on ne doit pas recréer les ventes.
-      if (
-        commande.statut === "livree" &&
-        statut === "livree"
-      ) {
+      const ancienStatut = commande.statut;
+
+      // ==========================================
+      // SI LE STATUT NE CHANGE PAS
+      // ==========================================
+
+      if (ancienStatut === statut) {
         return res.json({
-          message: "Cette commande est déjà livrée.",
+          message:
+            "Le statut de la commande est déjà " +
+            statut +
+            ".",
         });
       }
 
       // ==========================================
-      // CAS NORMAL : changement de statut
+      // CAS : ANNULATION
       // ==========================================
 
-      if (statut !== "livree") {
+      if (statut === "annulee") {
         db.run(
           `
           UPDATE commandes
@@ -2361,15 +2386,47 @@ app.put("/api/commandes/:id/statut", (req, res) => {
           [statut, commandeId],
           function (err) {
             if (err) {
+              console.error(
+                "Erreur annulation commande :",
+                err.message
+              );
+
               return res.status(500).json({
-                message: err.message,
+                message:
+                  "Impossible de modifier le statut.",
               });
             }
 
-            return res.json({
-              message:
-                "Statut de la commande modifié avec succès.",
-            });
+            // Notification
+            db.run(
+              `
+              INSERT INTO notifications
+              (
+                commande_id,
+                statut,
+                message
+              )
+              VALUES (?, ?, ?)
+              `,
+              [
+                commandeId,
+                "annulee",
+                "🔴 Votre commande a été annulée.",
+              ],
+              (notificationError) => {
+                if (notificationError) {
+                  console.error(
+                    "Erreur notification :",
+                    notificationError.message
+                  );
+                }
+
+                return res.json({
+                  message:
+                    "Commande annulée avec succès.",
+                });
+              }
+            );
           }
         );
 
@@ -2377,146 +2434,153 @@ app.put("/api/commandes/:id/statut", (req, res) => {
       }
 
       // ==========================================
-      // COMMANDE LIVRÉE
+      // CAS : LIVRAISON
       // ==========================================
 
-      db.all(
-        `
-        SELECT
-          commande_details.produit_id,
-          commande_details.quantite,
-          commande_details.prix,
-          produits.nom,
-          produits.stock
-        FROM commande_details
-        INNER JOIN produits
-          ON commande_details.produit_id = produits.id
-        WHERE commande_details.commande_id = ?
-        `,
-        [commandeId],
-        (err, details) => {
-          if (err) {
-            return res.status(500).json({
-              message: err.message,
-            });
-          }
+      if (statut === "livree") {
+        // Récupérer les produits de la commande
+        db.all(
+          `
+          SELECT
+            commande_details.produit_id,
+            commande_details.quantite,
+            commande_details.prix,
+            produits.nom,
+            produits.stock
+          FROM commande_details
+          INNER JOIN produits
+            ON commande_details.produit_id = produits.id
+          WHERE commande_details.commande_id = ?
+          `,
+          [commandeId],
+          (err, details) => {
+            if (err) {
+              console.error(
+                "Erreur récupération détails :",
+                err.message
+              );
 
-          if (!details || details.length === 0) {
-            return res.status(400).json({
-              message:
-                "Cette commande ne contient aucun produit.",
-            });
-          }
+              return res.status(500).json({
+                message:
+                  "Impossible de récupérer les produits de la commande.",
+              });
+            }
 
-          // ========================================
-          // VÉRIFIER SI LES VENTES EXISTENT DÉJÀ
-          // ========================================
+            if (!details || details.length === 0) {
+              return res.status(400).json({
+                message:
+                  "Cette commande ne contient aucun produit.",
+              });
+            }
 
-          db.get(
-            `
-            SELECT COUNT(*) AS nombre
-            FROM ventes
-            WHERE commande_id = ?
-            `,
-            [commandeId],
-            (err, resultat) => {
-              if (err) {
-                return res.status(500).json({
-                  message: err.message,
-                });
-              }
+            // ========================================
+            // VÉRIFIER SI LES VENTES EXISTENT DÉJÀ
+            // ========================================
 
-              if (Number(resultat.nombre) > 0) {
-                return res.status(400).json({
-                  message:
-                    "Les ventes de cette commande ont déjà été enregistrées.",
-                });
-              }
+            db.get(
+              `
+              SELECT COUNT(*) AS nombre
+              FROM ventes
+              WHERE commande_id = ?
+              `,
+              [commandeId],
+              (err, resultat) => {
+                if (err) {
+                  console.error(
+                    "Erreur vérification ventes :",
+                    err.message
+                  );
 
-              // ====================================
-              // VÉRIFIER LE STOCK
-              // ====================================
-
-              let indexVerification = 0;
-
-              const verifierStock = () => {
-                if (
-                  indexVerification >=
-                  details.length
-                ) {
-                  enregistrerVentes();
-                  return;
-                }
-
-                const detail =
-                  details[indexVerification];
-
-                if (
-                  Number(detail.stock) <
-                  Number(detail.quantite)
-                ) {
-                  return res.status(400).json({
+                  return res.status(500).json({
                     message:
-                      `Stock insuffisant pour "${detail.nom}". Stock disponible : ${detail.stock}, quantité demandée : ${detail.quantite}.`,
+                      "Impossible de vérifier les ventes.",
                   });
                 }
 
-                indexVerification++;
+                // Si des ventes existent déjà,
+                // on ne les recrée pas.
+                if (
+                  resultat &&
+                  Number(resultat.nombre) > 0
+                ) {
+                  return res.status(400).json({
+                    message:
+                      "Les ventes de cette commande ont déjà été enregistrées.",
+                  });
+                }
 
-                verifierStock();
-              };
+                // ====================================
+                // VÉRIFICATION DU STOCK
+                // ====================================
 
-              // ====================================
-              // ENREGISTRER LES VENTES
-              // ====================================
-
-              const enregistrerVentes = () => {
-                let indexVente = 0;
-
-                const enregistrer = () => {
+                for (const detail of details) {
                   if (
-                    indexVente >=
-                    details.length
+                    Number(detail.stock) <
+                    Number(detail.quantite)
                   ) {
+                    return res.status(400).json({
+                      message:
+                        `Stock insuffisant pour "${detail.nom}". ` +
+                        `Stock disponible : ${detail.stock}, ` +
+                        `quantité demandée : ${detail.quantite}.`,
+                    });
+                  }
+                }
+
+                // ====================================
+                // ENREGISTRER LES VENTES
+                // ====================================
+
+                let index = 0;
+
+                const enregistrerVenteSuivante = () => {
+                  if (index >= details.length) {
                     terminerCommande();
                     return;
                   }
 
-                  const detail =
-                    details[indexVente];
+                  const detail = details[index];
 
                   const montant =
                     Number(detail.prix) *
                     Number(detail.quantite);
 
-                  // Ajouter la vente
                   db.run(
                     `
                     INSERT INTO ventes
-(
-  produit_id,
-  commande_id,
-  quantite,
-  montant,
-  origine
-)
-VALUES (?, ?, ?, ?, ?)
+                    (
+                      produit_id,
+                      commande_id,
+                      quantite,
+                      montant,
+                      origine
+                    )
+                    VALUES (?, ?, ?, ?, ?)
                     `,
                     [
                       detail.produit_id,
                       commandeId,
-                      detail.quantite,
+                      Number(detail.quantite),
                       montant,
                       "en_ligne",
                     ],
                     function (err) {
                       if (err) {
+                        console.error(
+                          "Erreur création vente :",
+                          err.message
+                        );
+
                         return res.status(500).json({
-                          message: err.message,
+                          message:
+                            "Impossible d'enregistrer la vente.",
                         });
                       }
 
-                      // Diminuer le stock
+                      // ==================================
+                      // DIMINUER LE STOCK
+                      // ==================================
+
                       db.run(
                         `
                         UPDATE produits
@@ -2524,82 +2588,194 @@ VALUES (?, ?, ?, ?, ?)
                         WHERE id = ?
                         `,
                         [
-                          detail.quantite,
+                          Number(detail.quantite),
                           detail.produit_id,
                         ],
                         function (err) {
                           if (err) {
+                            console.error(
+                              "Erreur mise à jour stock :",
+                              err.message
+                            );
+
                             return res.status(500).json({
-                              message: err.message,
+                              message:
+                                "La vente a été enregistrée mais le stock n'a pas pu être mis à jour.",
                             });
                           }
 
-                          indexVente++;
+                          index++;
 
-                          enregistrer();
+                          enregistrerVenteSuivante();
                         }
                       );
                     }
                   );
                 };
 
-                enregistrer();
-              };
+                // ====================================
+                // TERMINER LA COMMANDE
+                // ====================================
 
-              // ====================================
-              // TERMINER LA COMMANDE
-              // ====================================
+                const terminerCommande = () => {
+                  db.run(
+                    `
+                    UPDATE commandes
+                    SET
+                      statut = ?,
+                      date_livraison = CURRENT_TIMESTAMP
+                    WHERE id = ?
+                    `,
+                    ["livree", commandeId],
+                    function (err) {
+                      if (err) {
+                        console.error(
+                          "Erreur mise à jour commande :",
+                          err.message
+                        );
 
-              const terminerCommande = () => {
-  db.run(
-    `
-    UPDATE commandes
-    SET statut = ?,
-        date_livraison = CURRENT_TIMESTAMP
-    WHERE id = ?
-    `,
-    ["livree", commandeId],
-    function (err) {
-      if (err) {
-        return res.status(500).json({
-          message: err.message,
-        });
+                        return res.status(500).json({
+                          message:
+                            "Les ventes ont été enregistrées, mais la commande n'a pas pu être livrée.",
+                        });
+                      }
+
+                      // ==================================
+                      // CRÉER LA NOTIFICATION
+                      // ==================================
+
+                      db.run(
+                        `
+                        INSERT INTO notifications
+                        (
+                          commande_id,
+                          statut,
+                          message
+                        )
+                        VALUES (?, ?, ?)
+                        `,
+                        [
+                          commandeId,
+                          "livree",
+                          "🎉 Votre commande a été livrée avec succès. Merci pour votre confiance !",
+                        ],
+                        function (notificationError) {
+                          if (notificationError) {
+                            console.error(
+                              "Erreur notification :",
+                              notificationError.message
+                            );
+
+                            // La commande est quand même livrée.
+                            return res.json({
+                              message:
+                                "Commande livrée et ventes enregistrées. La notification n'a pas pu être créée.",
+                            });
+                          }
+
+                          return res.json({
+                            message:
+                              "Commande livrée. Vente, stock, date de livraison et notification mis à jour avec succès.",
+                          });
+                        }
+                      );
+                    }
+                  );
+                };
+
+                // Commencer les ventes
+                enregistrerVenteSuivante();
+              }
+            );
+          }
+        );
+
+        return;
       }
 
-      // Créer la notification
+      // ==========================================
+      // AUTRES STATUTS
+      // ==========================================
+
       db.run(
         `
-        INSERT INTO notifications
-        (
-          commande_id,
-          statut,
-          message
-        )
-        VALUES (?, ?, ?)
+        UPDATE commandes
+        SET statut = ?
+        WHERE id = ?
         `,
-        [
-          commandeId,
-          "livree",
-          "🎉 Votre commande a été livrée avec succès. Merci pour votre confiance !",
-        ],
+        [statut, commandeId],
         function (err) {
           if (err) {
+            console.error(
+              "Erreur modification statut :",
+              err.message
+            );
+
             return res.status(500).json({
-              message: err.message,
+              message:
+                "Impossible de modifier le statut.",
             });
           }
 
-          return res.json({
-            message:
-              "Commande livrée. Vente, stock, date de livraison et notification mis à jour avec succès.",
-          });
-        }
-      );
-    }
-  );
-};
+          // ========================================
+          // CRÉER LA NOTIFICATION
+          // ========================================
 
-              verifierStock();
+          let message = "";
+
+          switch (statut) {
+            case "confirmee":
+              message =
+                "🔵 Votre commande a été confirmée.";
+              break;
+
+            case "preparation":
+              message =
+                "📦 Votre commande est en cours de préparation.";
+              break;
+
+            case "prete":
+              message =
+                "🟢 Votre commande est prête.";
+              break;
+
+            case "en_attente":
+              message =
+                "🟡 Votre commande est en attente.";
+              break;
+
+            default:
+              message =
+                "🔔 Le statut de votre commande a été mis à jour.";
+          }
+
+          db.run(
+            `
+            INSERT INTO notifications
+            (
+              commande_id,
+              statut,
+              message
+            )
+            VALUES (?, ?, ?)
+            `,
+            [
+              commandeId,
+              statut,
+              message,
+            ],
+            (notificationError) => {
+              if (notificationError) {
+                console.error(
+                  "Erreur notification :",
+                  notificationError.message
+                );
+              }
+
+              return res.json({
+                message:
+                  "Statut de la commande modifié avec succès.",
+              });
             }
           );
         }
