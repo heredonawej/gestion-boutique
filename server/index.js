@@ -1280,27 +1280,162 @@ app.delete("/api/utilisateurs/:id", (req, res) => {
 });
 
 // Modifier un utilisateur
-app.put("/api/utilisateurs/:id", (req, res) => {
-  const { id } = req.params;
-  const { nom, email, role } = req.body;
+// ==========================================
+// MODIFIER UN UTILISATEUR
+// ==========================================
 
-  db.run(
-    `UPDATE utilisateurs
-     SET nom = ?, email = ?, role = ?
-     WHERE id = ?`,
-    [nom, email, role, id],
-    function (err) {
-      if (err) {
-        return res.status(500).json({
-          message: err.message,
+app.put("/api/utilisateurs/:id", async (req, res) => {
+  const { id } = req.params;
+  const {
+    nom,
+    email,
+    role,
+    motDePasse,
+  } = req.body;
+
+  if (!nom || !email || !role) {
+    return res.status(400).json({
+      message:
+        "Le nom, l'email et le rôle sont obligatoires.",
+    });
+  }
+
+  try {
+
+    // ======================================
+    // MODIFICATION AVEC MOT DE PASSE
+    // ======================================
+
+    if (
+      motDePasse &&
+      motDePasse.trim() !== ""
+    ) {
+
+      const hash =
+        await bcrypt.hash(
+          motDePasse,
+          10
+        );
+
+      db.run(
+        `
+        UPDATE utilisateurs
+        SET
+          nom = ?,
+          email = ?,
+          role = ?,
+          mot_de_passe = ?
+        WHERE id = ?
+        `,
+        [
+          nom,
+          email,
+          role,
+          hash,
+          id,
+        ],
+        function (err) {
+
+          if (err) {
+
+            if (
+              err.message.includes(
+                "UNIQUE constraint failed"
+              )
+            ) {
+              return res.status(400).json({
+                message:
+                  "Cet email est déjà utilisé.",
+              });
+            }
+
+            return res.status(500).json({
+              message: err.message,
+            });
+          }
+
+          if (this.changes === 0) {
+            return res.status(404).json({
+              message:
+                "Utilisateur introuvable.",
+            });
+          }
+
+          res.json({
+            message:
+              "Utilisateur et mot de passe modifiés avec succès.",
+          });
+        }
+      );
+
+      return;
+    }
+
+    // ======================================
+    // MODIFICATION SANS MOT DE PASSE
+    // ======================================
+
+    db.run(
+      `
+      UPDATE utilisateurs
+      SET
+        nom = ?,
+        email = ?,
+        role = ?
+      WHERE id = ?
+      `,
+      [
+        nom,
+        email,
+        role,
+        id,
+      ],
+      function (err) {
+
+        if (err) {
+
+          if (
+            err.message.includes(
+              "UNIQUE constraint failed"
+            )
+          ) {
+            return res.status(400).json({
+              message:
+                "Cet email est déjà utilisé.",
+            });
+          }
+
+          return res.status(500).json({
+            message: err.message,
+          });
+        }
+
+        if (this.changes === 0) {
+          return res.status(404).json({
+            message:
+              "Utilisateur introuvable.",
+          });
+        }
+
+        res.json({
+          message:
+            "Utilisateur modifié avec succès.",
         });
       }
+    );
 
-      res.json({
-        message: "Utilisateur modifié avec succès",
-      });
-    }
-  );
+  } catch (error) {
+
+    console.error(
+      "Erreur modification utilisateur :",
+      error
+    );
+
+    res.status(500).json({
+      message:
+        "Erreur lors de la modification de l'utilisateur.",
+    });
+  }
 });
 
 app.post("/api/fournisseurs", (req, res) => {
