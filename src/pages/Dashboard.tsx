@@ -12,6 +12,8 @@ import {
   FaChartLine,
   FaLock,
   FaUnlock,
+  FaTrash,
+  FaShieldAlt,
 } from "react-icons/fa";
 
 import { getDashboard } from "../services/dashboardService";
@@ -19,6 +21,117 @@ import type { Dashboard as DashboardType } from "../types/Dashboard";
 
 function Dashboard() {
   const navigate = useNavigate();
+  // ==========================================
+// UTILISATEUR CONNECTÉ
+// ==========================================
+
+const utilisateurConnecte = JSON.parse(
+  localStorage.getItem("utilisateur") || "null"
+);
+
+const estAdmin =
+  utilisateurConnecte?.role === "admin";
+
+// ==========================================
+// VIDER LES DONNÉES
+// ==========================================
+
+const viderDonnees = async () => {
+
+  const confirmation =
+    window.confirm(
+      "⚠️ ATTENTION !\n\n" +
+      "Cette action va supprimer définitivement :\n\n" +
+      "• Tous les produits\n" +
+      "• Toutes les ventes\n" +
+      "• Tous les achats\n" +
+      "• Tous les fournisseurs\n" +
+      "• Toutes les commandes\n" +
+      "• Toutes les notifications\n" +
+      "• Toute la corbeille\n\n" +
+      "Les utilisateurs et le compte administrateur seront conservés.\n\n" +
+      "Voulez-vous continuer ?"
+    );
+
+  if (!confirmation) {
+    return;
+  }
+
+  const confirmationFinale =
+    window.prompt(
+      'Pour confirmer définitivement, tapez : SUPPRIMER'
+    );
+
+  if (confirmationFinale !== "SUPPRIMER") {
+
+    alert(
+      "Suppression annulée."
+    );
+
+    return;
+  }
+
+  try {
+
+    const token =
+      localStorage.getItem("token");
+
+    if (!token) {
+
+      alert(
+        "Votre session a expiré. Veuillez vous reconnecter."
+      );
+
+      return;
+    }
+
+    const response = await fetch(
+      `${import.meta.env.PROD
+        ? "https://gestion-boutique-2qu3.onrender.com"
+        : "http://localhost:3001"
+      }/api/admin/vider-donnees`,
+      {
+        method: "DELETE",
+
+        headers: {
+          Authorization:
+            `Bearer ${token}`,
+        },
+      }
+    );
+
+    const data =
+      await response.json();
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.message ||
+        "Impossible de vider les données."
+      );
+    }
+
+    alert(
+      data.message
+    );
+
+    // Recharger le dashboard
+    window.location.reload();
+
+  } catch (error) {
+
+    console.error(
+      "Erreur suppression données :",
+      error
+    );
+
+    alert(
+      error instanceof Error
+        ? error.message
+        : "Une erreur est survenue."
+    );
+  }
+};
 
   const [dashboard, setDashboard] =
     useState<DashboardType>({
@@ -224,27 +337,74 @@ function Dashboard() {
 
         </div>
 
-        {/* Date */}
+        {/* DATE + ACTION ADMIN */}
 
-        <div className="bg-white border border-gray-100 shadow-sm rounded-xl px-5 py-3">
+<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
 
-          <p className="text-xs text-gray-400">
-            Aujourd'hui
-          </p>
+  {/* Date */}
 
-          <p className="font-semibold text-gray-800">
-            {new Date().toLocaleDateString(
-              "fr-FR",
-              {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-              }
-            )}
-          </p>
+  <div className="bg-white border border-gray-100 shadow-sm rounded-xl px-5 py-3">
 
-        </div>
+    <p className="text-xs text-gray-400">
+      Aujourd'hui
+    </p>
+
+    <p className="font-semibold text-gray-800">
+      {new Date().toLocaleDateString(
+        "fr-FR",
+        {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }
+      )}
+    </p>
+
+  </div>
+
+  {/* Bouton ADMIN */}
+
+  {estAdmin && (
+
+    <button
+      type="button"
+      onClick={viderDonnees}
+      className="
+        flex
+        items-center
+        justify-center
+        gap-2
+        bg-red-50
+        hover:bg-red-600
+        text-red-600
+        hover:text-white
+        border
+        border-red-200
+        hover:border-red-600
+        px-4
+        py-3
+        rounded-xl
+        font-semibold
+        text-sm
+        transition-all
+        duration-200
+        shadow-sm
+      "
+      title="Vider toutes les données"
+    >
+
+      <FaTrash />
+
+      Vider les données
+
+      <FaShieldAlt className="text-xs" />
+
+    </button>
+
+  )}
+
+</div>
 
       </div>
 

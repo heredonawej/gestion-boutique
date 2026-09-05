@@ -1106,6 +1106,154 @@ app.get("/api/dashboard", (req, res) => {
     }
   );
 });
+// ==========================================
+// VIDER LES DONNÉES DE LA BOUTIQUE
+// ADMIN UNIQUEMENT
+// ==========================================
+
+app.delete(
+  "/api/admin/vider-donnees",
+  verifierToken,
+  verifierAdmin,
+  (req, res) => {
+
+    db.serialize(() => {
+
+      db.run("BEGIN TRANSACTION", (err) => {
+
+        if (err) {
+          console.error(
+            "Erreur début transaction :",
+            err.message
+          );
+
+          return res.status(500).json({
+            message:
+              "Impossible de commencer la suppression.",
+          });
+        }
+
+        // ==========================================
+        // SUPPRESSION DES DONNÉES
+        // ==========================================
+
+        const suppressions = [
+
+          // Détails des commandes
+          "DELETE FROM commande_details",
+
+          // Notifications
+          "DELETE FROM notifications",
+
+          // Ventes
+          "DELETE FROM ventes",
+
+          // Achats
+          "DELETE FROM achats",
+
+          // Commandes
+          "DELETE FROM commandes",
+
+          // Photos supplémentaires
+          "DELETE FROM produit_images",
+
+          // Corbeille
+          "DELETE FROM corbeille",
+
+          // Fournisseurs
+          "DELETE FROM fournisseurs",
+
+          // Produits
+          "DELETE FROM produits",
+
+          // Réinitialiser les compteurs
+          `DELETE FROM sqlite_sequence
+           WHERE name IN (
+             'produits',
+             'produit_images',
+             'ventes',
+             'achats',
+             'fournisseurs',
+             'commandes',
+             'commande_details',
+             'notifications',
+             'corbeille'
+           )`,
+        ];
+
+        let index = 0;
+
+        const executerSuppression = () => {
+
+          if (index >= suppressions.length) {
+
+            db.run(
+              "COMMIT",
+              (commitError) => {
+
+                if (commitError) {
+
+                  console.error(
+                    "Erreur COMMIT :",
+                    commitError.message
+                  );
+
+                  db.run("ROLLBACK");
+
+                  return res.status(500).json({
+                    message:
+                      "La suppression n'a pas pu être validée.",
+                  });
+                }
+
+                return res.json({
+                  message:
+                    "Toutes les données de la boutique et l'historique ont été supprimés avec succès.",
+                });
+
+              }
+            );
+
+            return;
+          }
+
+          db.run(
+            suppressions[index],
+            (suppressionError) => {
+
+              if (suppressionError) {
+
+                console.error(
+                  "Erreur suppression :",
+                  suppressionError.message
+                );
+
+                db.run("ROLLBACK");
+
+                return res.status(500).json({
+                  message:
+                    "Erreur pendant la suppression des données.",
+                  erreur:
+                    suppressionError.message,
+                });
+              }
+
+              index++;
+
+              executerSuppression();
+
+            }
+          );
+
+        };
+
+        executerSuppression();
+
+      });
+
+    });
+  }
+);
 
 // Données du graphique des catégories
 app.get("/api/dashboard/chart", (req, res) => {

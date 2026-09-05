@@ -19,6 +19,9 @@ function Achats() {
   const [achats, setAchats] = useState<Achat[]>([]);
   const [chargement, setChargement] = useState(true);
 
+  // Contrôle l'ouverture du formulaire
+  const [formOuvert, setFormOuvert] = useState(false);
+
   const chargerAchats = async () => {
     try {
       setChargement(true);
@@ -57,10 +60,42 @@ function Achats() {
 
       </div>
 
-      {/* Formulaire */}
-      <AchatForm
-        onAchatEnregistre={chargerAchats}
-      />
+      {/* Bouton formulaire */}
+      <div className="mb-6">
+
+        <button
+          type="button"
+          onClick={() => setFormOuvert(!formOuvert)}
+          className="bg-blue-600/80 hover:bg-blue-700/90 text-white font-semibold px-6 py-3 rounded-xl shadow-md transition-all duration-300 flex items-center gap-2"
+        >
+          <span className="text-lg">
+            {formOuvert ? "▲" : "➕"}
+          </span>
+
+          {formOuvert
+            ? "Fermer le formulaire"
+            : "Enregistrer un achat"}
+        </button>
+
+      </div>
+
+      {/* Formulaire déroulant */}
+      <div
+        className={`overflow-hidden transition-all duration-500 ease-in-out ${
+          formOuvert
+            ? "max-h-[2000px] opacity-100 mb-8"
+            : "max-h-0 opacity-0 mb-0"
+        }`}
+      >
+
+        <AchatForm
+          onAchatEnregistre={async () => {
+            await chargerAchats();
+            setFormOuvert(false);
+          }}
+        />
+
+      </div>
 
       {/* Historique */}
       {chargement ? (
