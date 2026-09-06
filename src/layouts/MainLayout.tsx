@@ -29,7 +29,7 @@ function MainLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-950 transition-colors duration-300">
 
       {/* ========================================= */}
       {/* SIDEBAR */}
@@ -47,16 +47,31 @@ function MainLayout() {
         {/* HEADER */}
         {/* ========================================= */}
 
-        <header className="bg-white/90 backdrop-blur-md shadow-sm px-8 py-4 flex justify-between items-center">
+        <header
+          className="
+            bg-white/90
+            dark:bg-gray-900/90
+            backdrop-blur-md
+            shadow-sm
+            dark:shadow-black/20
+            px-8
+            py-4
+            flex
+            justify-between
+            items-center
+            transition-colors
+            duration-300
+          "
+        >
 
           {/* Logo / titre */}
 
           <div>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
               Gestion Boutique
             </h1>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               Tableau de bord
             </p>
           </div>
@@ -77,17 +92,18 @@ function MainLayout() {
                 px-3
                 py-2
                 hover:bg-gray-100
+                dark:hover:bg-gray-800
                 transition
               "
             >
 
               <div className="text-right">
 
-                <p className="font-semibold text-gray-800">
+                <p className="font-semibold text-gray-800 dark:text-white">
                   {utilisateur.nom || "Utilisateur"}
                 </p>
 
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
                   {utilisateur.email || ""}
                 </p>
 
@@ -116,11 +132,17 @@ function MainLayout() {
                   mt-3
                   w-64
                   bg-white
+                  dark:bg-gray-900
                   rounded-2xl
                   shadow-2xl
+                  dark:shadow-black/40
                   border
+                  border-gray-200
+                  dark:border-gray-700
                   overflow-hidden
                   z-[100]
+                  transition-colors
+                  duration-300
                 "
               >
 
@@ -132,7 +154,10 @@ function MainLayout() {
                     w-full
                     px-5
                     py-3
+                    text-gray-700
+                    dark:text-gray-200
                     hover:bg-gray-100
+                    dark:hover:bg-gray-800
                     transition
                   "
                 >
@@ -152,7 +177,10 @@ function MainLayout() {
                     w-full
                     px-5
                     py-3
+                    text-gray-700
+                    dark:text-gray-200
                     hover:bg-gray-100
+                    dark:hover:bg-gray-800
                     transition
                   "
                 >
@@ -168,7 +196,10 @@ function MainLayout() {
                     w-full
                     px-5
                     py-3
+                    text-gray-700
+                    dark:text-gray-200
                     hover:bg-gray-100
+                    dark:hover:bg-gray-800
                     transition
                   "
                 >
@@ -186,7 +217,9 @@ function MainLayout() {
                     px-5
                     py-3
                     text-red-600
+                    dark:text-red-400
                     hover:bg-red-50
+                    dark:hover:bg-red-950/40
                     transition
                   "
                 >
@@ -206,7 +239,17 @@ function MainLayout() {
         {/* CONTENU DES PAGES */}
         {/* ========================================= */}
 
-        <main className="flex-1 p-8 overflow-auto">
+        <main
+          className="
+            flex-1
+            p-8
+            overflow-auto
+            text-gray-800
+            dark:text-gray-100
+            transition-colors
+            duration-300
+          "
+        >
 
           <Outlet />
 
