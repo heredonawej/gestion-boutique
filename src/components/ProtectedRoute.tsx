@@ -6,20 +6,37 @@ interface Props {
 }
 
 function ProtectedRoute({ children, role }: Props) {
-  const utilisateur = JSON.parse(
-    localStorage.getItem("utilisateur") || "{}"
-  );
+  const token = localStorage.getItem("token");
 
-  // Pas connecté
-  if (!utilisateur.token && !localStorage.getItem("token")) {
+  let utilisateur: {
+    role?: string;
+  } = {};
+
+  try {
+    utilisateur = JSON.parse(
+      localStorage.getItem("utilisateur") || "{}"
+    );
+  } catch (error) {
+    console.error("Erreur lors de la lecture de l'utilisateur :", error);
+  }
+
+  // =====================================
+  // PAS CONNECTÉ
+  // =====================================
+  if (!token) {
     return <Navigate to="/login" replace />;
   }
 
-  // Vérification du rôle
+  // =====================================
+  // VÉRIFICATION DU RÔLE
+  // =====================================
   if (role && utilisateur.role !== role) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
+  // =====================================
+  // ACCÈS AUTORISÉ
+  // =====================================
   return <>{children}</>;
 }
 

@@ -2,6 +2,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
 
 import Login from "./pages/Login";
@@ -35,37 +36,31 @@ function App() {
             ESPACE PUBLIC / CLIENT
         ========================= */}
 
-        {/* Page d'accueil */}
         <Route
           path="/"
           element={<Accueil />}
         />
 
-        {/* Connexion */}
         <Route
           path="/login"
           element={<Login />}
         />
 
-        {/* Boutique */}
         <Route
           path="/boutique"
           element={<Boutique />}
         />
 
-        {/* Détail d'un produit */}
         <Route
           path="/boutique/produit/:id"
           element={<ProduitDetail />}
         />
 
-        {/* Panier */}
         <Route
           path="/panier"
           element={<Panier />}
         />
 
-        {/* Suivi commande */}
         <Route
           path="/suivi-commande"
           element={<SuiviCommande />}
@@ -73,7 +68,7 @@ function App() {
 
 
         {/* =========================
-            ESPACE ADMINISTRATEUR
+            ESPACE CONNECTÉ
         ========================= */}
 
         <Route
@@ -84,40 +79,40 @@ function App() {
           }
         >
 
-          {/* Dashboard */}
           <Route
             path="/dashboard"
             element={<Dashboard />}
           />
 
-          {/* Produits */}
           <Route
             path="/produits"
             element={<Produits />}
           />
 
-          {/* Ventes */}
           <Route
             path="/ventes"
             element={<Ventes />}
           />
 
-          {/* Historique */}
           <Route
             path="/historique"
             element={<Historique />}
           />
 
-          {/* Fournisseurs */}
           <Route
             path="/fournisseurs"
             element={<Fournisseurs />}
           />
 
-          {/* Commandes */}
           <Route
             path="/commandes"
             element={<Commandes />}
+          />
+
+          {/* Corbeille : maintenant protégée */}
+          <Route
+            path="/corbeille"
+            element={<Corbeille />}
           />
 
         </Route>
@@ -135,29 +130,32 @@ function App() {
           }
         >
 
-          {/* Utilisateurs */}
           <Route
             path="/utilisateurs"
             element={<Utilisateurs />}
           />
 
-          {/* Achats */}
           <Route
             path="/achats"
             element={<Achats />}
           />
 
-          {/* Paramètres */}
           <Route
             path="/parametres"
             element={<Parametres />}
           />
 
         </Route>
+
+
+        {/* =========================
+            URL INCONNUE
+        ========================= */}
+
         <Route
-  path="/corbeille"
-  element={<Corbeille />}
-/>
+          path="*"
+          element={<Navigate to="/login" replace />}
+        />
 
       </Routes>
 
