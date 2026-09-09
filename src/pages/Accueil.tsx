@@ -406,7 +406,7 @@ function Accueil() {
                 mb-9
               ">
                 Découvrez nos articles disponibles et trouvez
-                facilement les produits qui vous correspondent.
+                facilement les produits qui vous correspondent.😎
                 Commandez directement depuis notre boutique.
               </p>
 
