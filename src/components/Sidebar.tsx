@@ -80,28 +80,36 @@ function Sidebar() {
         top-1/2
         -translate-y-1/2
         z-50
+
         ${ouvert ? "w-64" : "w-20"}
+
         min-h-[520px]
         max-h-[90vh]
+
         flex
         flex-col
+
         rounded-3xl
         border
         border-white/30
+        dark:border-gray-700/50
+
         bg-white/20
+        dark:bg-gray-900/70
+
         backdrop-blur-xl
+
         shadow-2xl
+
         transition-all
         duration-300
+
         overflow-hidden
       `}
     >
-      {/* ================================= */}
       {/* LOGO */}
-      {/* ================================= */}
 
-      <div className="flex items-center justify-center h-20 border-b border-white/20">
-
+      <div className="flex items-center justify-center h-20 border-b border-white/20 dark:border-gray-700/50">
         <div
           className="
             w-12
@@ -121,24 +129,20 @@ function Sidebar() {
 
         {ouvert && (
           <div className="ml-3 whitespace-nowrap">
-            <h1 className="font-bold text-gray-800">
+            <h1 className="font-bold text-gray-800 dark:text-white">
               Gestion Boutique
             </h1>
 
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
               Administration
             </p>
           </div>
         )}
-
       </div>
 
-      {/* ================================= */}
       {/* UTILISATEUR */}
-      {/* ================================= */}
 
       <div className="px-3 py-5">
-
         <div
           className={`
             flex
@@ -148,9 +152,9 @@ function Sidebar() {
             p-2
             rounded-2xl
             bg-white/30
+            dark:bg-gray-800/60
           `}
         >
-
           <img
             src={`https://ui-avatars.com/api/?name=${encodeURIComponent(
               utilisateur.nom || "Utilisateur"
@@ -161,30 +165,22 @@ function Sidebar() {
 
           {ouvert && (
             <div className="min-w-0">
-
-              <h3 className="font-bold text-gray-800 truncate">
+              <h3 className="font-bold text-gray-800 dark:text-white truncate">
                 {utilisateur.nom || "Utilisateur"}
               </h3>
 
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 {utilisateur.role || ""}
               </p>
-
             </div>
           )}
-
         </div>
-
       </div>
 
-      {/* ================================= */}
       {/* MENU */}
-      {/* ================================= */}
 
       <nav className="flex-1 px-3 space-y-2 overflow-y-auto">
-
         {menu.map((item) => (
-
           <NavLink
             key={item.chemin}
             to={item.chemin}
@@ -204,12 +200,11 @@ function Sidebar() {
               ${
                 isActive
                   ? "bg-blue-600 text-white shadow-lg"
-                  : "text-gray-700 hover:bg-white/50 hover:text-blue-600"
+                  : "text-gray-700 dark:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400"
               }
               `
             }
           >
-
             <span className="text-xl min-w-[24px] flex justify-center">
               {item.icone}
             </span>
@@ -219,18 +214,13 @@ function Sidebar() {
                 {item.nom}
               </span>
             )}
-
           </NavLink>
-
         ))}
 
-        {/* ================================= */}
         {/* MENU ADMIN */}
-        {/* ================================= */}
 
         {utilisateur.role === "admin" && (
           <>
-
             <NavLink
               to="/fournisseurs"
               className={({ isActive }) =>
@@ -247,22 +237,18 @@ function Sidebar() {
                 ${
                   isActive
                     ? "bg-blue-600 text-white shadow-lg"
-                    : "text-gray-700 hover:bg-white/50 hover:text-blue-600"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400"
                 }
                 `
               }
             >
-
               <span className="text-xl min-w-[24px] flex justify-center">
                 <FaTruck />
               </span>
 
               {ouvert && (
-                <span className="font-medium">
-                  Fournisseurs
-                </span>
+                <span className="font-medium">Fournisseurs</span>
               )}
-
             </NavLink>
 
             <NavLink
@@ -281,22 +267,18 @@ function Sidebar() {
                 ${
                   isActive
                     ? "bg-blue-600 text-white shadow-lg"
-                    : "text-gray-700 hover:bg-white/50 hover:text-blue-600"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400"
                 }
                 `
               }
             >
-
               <span className="text-xl min-w-[24px] flex justify-center">
                 <FaUsers />
               </span>
 
               {ouvert && (
-                <span className="font-medium">
-                  Utilisateurs
-                </span>
+                <span className="font-medium">Utilisateurs</span>
               )}
-
             </NavLink>
 
             <NavLink
@@ -315,22 +297,18 @@ function Sidebar() {
                 ${
                   isActive
                     ? "bg-blue-600 text-white shadow-lg"
-                    : "text-gray-700 hover:bg-white/50 hover:text-blue-600"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400"
                 }
                 `
               }
             >
-
               <span className="text-xl min-w-[24px] flex justify-center">
                 <FaCog />
               </span>
 
               {ouvert && (
-                <span className="font-medium">
-                  Paramètres
-                </span>
+                <span className="font-medium">Paramètres</span>
               )}
-
             </NavLink>
 
             <NavLink
@@ -349,35 +327,26 @@ function Sidebar() {
                 ${
                   isActive
                     ? "bg-blue-600 text-white shadow-lg"
-                    : "text-gray-700 hover:bg-white/50 hover:text-blue-600"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-white/50 dark:hover:bg-gray-800 hover:text-blue-600 dark:hover:text-blue-400"
                 }
                 `
               }
             >
-
               <span className="text-xl min-w-[24px] flex justify-center">
                 <FaTrash />
               </span>
 
               {ouvert && (
-                <span className="font-medium">
-                  Corbeille
-                </span>
+                <span className="font-medium">Corbeille</span>
               )}
-
             </NavLink>
-
           </>
         )}
-
       </nav>
 
-      {/* ================================= */}
       {/* DÉCONNEXION */}
-      {/* ================================= */}
 
-      <div className="p-3 border-t border-white/20">
-
+      <div className="p-3 border-t border-white/20 dark:border-gray-700/50">
         <button
           onClick={deconnexion}
           className="
@@ -396,7 +365,6 @@ function Sidebar() {
             shadow
           "
         >
-
           <FaSignOutAlt className="text-lg" />
 
           {ouvert && (
@@ -404,11 +372,8 @@ function Sidebar() {
               Déconnexion
             </span>
           )}
-
         </button>
-
       </div>
-
     </aside>
   );
 }
