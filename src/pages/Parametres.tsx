@@ -15,17 +15,19 @@ function Parametres() {
   // ==============================
   // APPARENCE
   // ==============================
+
   const [modeSombre, setModeSombre] = useState(() => {
     return localStorage.getItem("modeApparence") === "sombre";
   });
 
-  // Appliquer le mode choisi
   useEffect(() => {
+    const html = document.documentElement;
+
     if (modeSombre) {
-      document.documentElement.classList.add("dark");
+      html.classList.add("dark");
       localStorage.setItem("modeApparence", "sombre");
     } else {
-      document.documentElement.classList.remove("dark");
+      html.classList.remove("dark");
       localStorage.setItem("modeApparence", "clair");
     }
   }, [modeSombre]);
@@ -35,8 +37,9 @@ function Parametres() {
   };
 
   // ==============================
-  // SAUVEGARDE BOUTIQUE
+  // SAUVEGARDE
   // ==============================
+
   const sauvegarder = () => {
     sauvegarderBoutiqueInfo({
       nom,
@@ -61,181 +64,186 @@ function Parametres() {
         duration-300
       "
     >
+      {/* ==============================
+          TITRE
+      ============================== */}
 
-      {/* =========================
-          EN-TÊTE
-      ========================= */}
       <div className="mb-8">
-
         <h1 className="text-3xl font-bold">
           ⚙️ Paramètres
         </h1>
 
-        <p className="text-gray-500 dark:text-gray-400 mt-2">
+        <p className="mt-2 text-gray-500 dark:text-gray-400">
           Gérez les informations générales de votre boutique.
         </p>
-
       </div>
 
-
-      {/* =========================
+      {/* ==============================
           APPARENCE
-      ========================= */}
+      ============================== */}
+
       <div
         className="
-          bg-white
-          dark:bg-gray-900
-          rounded-2xl
-          shadow-lg
-          p-6
           max-w-3xl
           mb-6
+          p-6
+          rounded-2xl
+          bg-white
+          dark:bg-gray-900
           border
-          border-gray-100
+          border-gray-200
           dark:border-gray-800
+          shadow-lg
           transition-colors
           duration-300
         "
       >
-
         <h2 className="text-2xl font-bold mb-2">
           🎨 Apparence
         </h2>
 
-        <p className="text-gray-500 dark:text-gray-400 mb-6">
+        <p className="mb-6 text-gray-500 dark:text-gray-400">
           Choisissez l'apparence de votre application.
         </p>
 
+        {/* CONTENEUR DU SWITCH */}
 
-        {/* Bouton sombre / clair */}
         <div
           className="
             flex
             items-center
             justify-between
-            gap-4
-            p-4
-            rounded-xl
+            gap-5
+            p-5
+            rounded-2xl
             bg-gray-100
             dark:bg-gray-800
+            border
+            border-gray-200
+            dark:border-gray-700
             transition-colors
             duration-300
           "
         >
-
           <div>
-
-            <p className="font-semibold text-lg">
+            <p className="text-lg font-bold">
               {modeSombre
                 ? "🌙 Mode sombre"
                 : "☀️ Mode clair"}
             </p>
 
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
               {modeSombre
-                ? "L'application utilise actuellement le thème sombre."
-                : "L'application utilise actuellement le thème clair."}
+                ? "Le thème sombre est actuellement activé."
+                : "Le thème clair est actuellement activé."}
             </p>
-
           </div>
 
+          {/* ==============================
+              SWITCH
+          ============================== */}
 
-          {/* SWITCH */}
           <button
             type="button"
             onClick={changerApparence}
-            aria-label="Changer l'apparence"
+            aria-label="Changer le mode d'apparence"
+            aria-pressed={modeSombre}
             className={`
               relative
-              w-24
-              h-12
+              w-20
+              h-10
               rounded-full
               flex
               items-center
+              flex-shrink-0
+              shadow-inner
               transition-all
               duration-300
-              shadow-inner
-              flex-shrink-0
+              focus:outline-none
+              focus:ring-2
+              focus:ring-blue-500
               ${
                 modeSombre
-                  ? "bg-purple-600"
+                  ? "bg-blue-600"
                   : "bg-gray-400"
               }
             `}
           >
+            {/* TEXTE */}
 
-            {/* Petit texte */}
             <span
               className={`
                 absolute
-                text-xs
+                text-[10px]
                 font-bold
                 text-white
                 ${
                   modeSombre
-                    ? "left-3"
-                    : "right-3"
+                    ? "left-2.5"
+                    : "right-2.5"
                 }
               `}
             >
               {modeSombre ? "ON" : "OFF"}
             </span>
 
+            {/* CERCLE */}
 
-            {/* Rond */}
             <span
               className={`
                 absolute
-                w-9
-                h-9
-                bg-white
+                top-1
+                left-1
+                w-8
+                h-8
                 rounded-full
-                shadow-lg
-                transition-all
+                bg-white
+                shadow-md
+                transition-transform
                 duration-300
                 ${
                   modeSombre
-                    ? "translate-x-12"
-                    : "translate-x-1"
+                    ? "translate-x-10"
+                    : "translate-x-0"
                 }
               `}
-            />
-
+            >
+              <span className="flex items-center justify-center w-full h-full text-sm">
+                {modeSombre ? "🌙" : "☀️"}
+              </span>
+            </span>
           </button>
-
         </div>
-
       </div>
 
-
-      {/* =========================
+      {/* ==============================
           INFORMATIONS BOUTIQUE
-      ========================= */}
+      ============================== */}
+
       <div
         className="
+          max-w-3xl
+          p-6
+          rounded-2xl
           bg-white
           dark:bg-gray-900
-          rounded-2xl
-          shadow-lg
-          p-6
-          max-w-3xl
           border
-          border-gray-100
+          border-gray-200
           dark:border-gray-800
+          shadow-lg
           transition-colors
           duration-300
         "
       >
-
         <h2 className="text-2xl font-bold mb-6">
           🏪 Informations de la boutique
         </h2>
 
         <div className="space-y-5">
+          {/* NOM */}
 
-          {/* Nom */}
           <div>
-            <label className="block font-semibold mb-2">
+            <label className="block mb-2 font-semibold">
               Nom de la boutique
             </label>
 
@@ -243,30 +251,31 @@ function Parametres() {
               type="text"
               value={nom}
               onChange={(e) => setNom(e.target.value)}
+              placeholder="Nom de la boutique"
               className="
                 w-full
+                p-3
+                rounded-xl
                 border
                 border-gray-300
                 dark:border-gray-700
-                rounded-lg
-                p-3
                 bg-white
                 dark:bg-gray-800
                 text-gray-900
                 dark:text-white
+                placeholder-gray-400
                 outline-none
                 focus:ring-2
                 focus:ring-blue-500
                 transition-colors
               "
-              placeholder="Nom de la boutique"
             />
           </div>
 
+          {/* TELEPHONE */}
 
-          {/* Téléphone */}
           <div>
-            <label className="block font-semibold mb-2">
+            <label className="block mb-2 font-semibold">
               Téléphone
             </label>
 
@@ -274,30 +283,31 @@ function Parametres() {
               type="text"
               value={telephone}
               onChange={(e) => setTelephone(e.target.value)}
+              placeholder="Ex : +243 000 000 000"
               className="
                 w-full
+                p-3
+                rounded-xl
                 border
                 border-gray-300
                 dark:border-gray-700
-                rounded-lg
-                p-3
                 bg-white
                 dark:bg-gray-800
                 text-gray-900
                 dark:text-white
+                placeholder-gray-400
                 outline-none
                 focus:ring-2
                 focus:ring-blue-500
                 transition-colors
               "
-              placeholder="Ex : +243 000 000 000"
             />
           </div>
 
+          {/* EMAIL */}
 
-          {/* Email */}
           <div>
-            <label className="block font-semibold mb-2">
+            <label className="block mb-2 font-semibold">
               Email
             </label>
 
@@ -305,30 +315,31 @@ function Parametres() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="Ex : contact@boutique.com"
               className="
                 w-full
+                p-3
+                rounded-xl
                 border
                 border-gray-300
                 dark:border-gray-700
-                rounded-lg
-                p-3
                 bg-white
                 dark:bg-gray-800
                 text-gray-900
                 dark:text-white
+                placeholder-gray-400
                 outline-none
                 focus:ring-2
                 focus:ring-blue-500
                 transition-colors
               "
-              placeholder="Ex : contact@boutique.com"
             />
           </div>
 
+          {/* ADRESSE */}
 
-          {/* Adresse */}
           <div>
-            <label className="block font-semibold mb-2">
+            <label className="block mb-2 font-semibold">
               Adresse
             </label>
 
@@ -336,54 +347,51 @@ function Parametres() {
               type="text"
               value={adresse}
               onChange={(e) => setAdresse(e.target.value)}
+              placeholder="Adresse de la boutique"
               className="
                 w-full
+                p-3
+                rounded-xl
                 border
                 border-gray-300
                 dark:border-gray-700
-                rounded-lg
-                p-3
                 bg-white
                 dark:bg-gray-800
                 text-gray-900
                 dark:text-white
+                placeholder-gray-400
                 outline-none
                 focus:ring-2
                 focus:ring-blue-500
                 transition-colors
               "
-              placeholder="Adresse de la boutique"
             />
           </div>
 
+          {/* BOUTON */}
 
-          {/* Bouton sauvegarder */}
           <div className="pt-3">
-
             <button
               type="button"
               onClick={sauvegarder}
               className="
+                px-6
+                py-3
+                rounded-xl
                 bg-blue-600
                 hover:bg-blue-700
                 text-white
-                px-6
-                py-3
-                rounded-lg
                 font-semibold
-                transition
-                shadow
+                shadow-md
+                transition-all
+                duration-200
               "
             >
               💾 Enregistrer les informations
             </button>
-
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }
